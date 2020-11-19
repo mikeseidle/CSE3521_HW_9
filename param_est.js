@@ -42,17 +42,41 @@ function calc_linLSQ_line(data) {
     * Hint: BE CAREFUL of the order, what do the columns of A refer and relate to?
     ***********************/
 
-    A[i][0]=??;
-    A[i][1]=??;
-    b[i]=??;
+    A[i][0]=x[i];
+    A[i][1]=1;
+    b[i]=y[i];
   }
+  console.log(numeric.prettyPrint(A));
+  console.log(numeric.prettyPrint(b));
 
   /***********************
   * TASK: Solve for parameters
   *
   * Refer to slides 18-19
   ***********************/
-  let p=??;
+  let ATranspose = numeric.transpose(A);
+  console.log("ATranspose");
+  console.log(numeric.prettyPrint(ATranspose));
+
+  let ATranA = numeric.dot(ATranspose,A);
+  console.log("ATranA");
+  console.log(numeric.prettyPrint(ATranA));
+
+  let InvATA = numeric.inv(ATranA);
+  console.log("InvATAI");
+  console.log(numeric.prettyPrint(InvATA));
+
+  let ATb = numeric.dot(ATranspose,b);
+  console.log("ATb");
+  console.log(numeric.prettyPrint(ATb));
+
+  let p= numeric.dot(ATb,InvATA);
+  console.log("p");
+  console.log(numeric.prettyPrint(p));
+
+  temp = p[0];
+  p[0] = p[1];
+  p[1] = temp; 
   
   let sse=0;
   for(let i=0;i<N;++i) {
@@ -62,6 +86,21 @@ function calc_linLSQ_line(data) {
     /***********************
     * TASK: Calculate the sum of squared error
     ***********************/
+   let Ap= numeric.dot(A,p);
+    console.log("Ap");
+    console.log(numeric.prettyPrint(Ap));
+
+    let temp = numeric.sub(Ap,b);
+    console.log("temp");
+    console.log(numeric.prettyPrint(temp));
+
+    let temp2= numeric.dot(temp,temp);
+    console.log("temp2");
+    console.log(numeric.prettyPrint(temp2));
+    sse = sse +temp2;
+  //  sse = sse + numeric.sub(Ap,b);
+  //  
+
   }
   helper_log_write("SSE="+sse);
     
