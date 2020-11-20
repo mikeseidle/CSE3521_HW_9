@@ -42,8 +42,8 @@ function calc_linLSQ_line(data) {
     * Hint: BE CAREFUL of the order, what do the columns of A refer and relate to?
     ***********************/
 
-    A[i][0]=x[i];
-    A[i][1]=1;
+    A[i][0]=x[i]; // Set value of x to corresponding value in data point
+    A[i][1]=1; // Set coefficient of k to 1
     b[i]=y[i];
   }
   console.log(numeric.prettyPrint(A));
@@ -74,6 +74,7 @@ function calc_linLSQ_line(data) {
   console.log("p");
   console.log(numeric.prettyPrint(p));
 
+  // Flip a and b in array so that p[0] = b and p[1] = a
   temp = p[0];
   p[0] = p[1];
   p[1] = temp; 
@@ -90,14 +91,14 @@ function calc_linLSQ_line(data) {
     console.log("Ap");
     console.log(numeric.prettyPrint(Ap));
 
-    let temp = numeric.sub(Ap,b);
+    let e = numeric.sub(Ap,b);
     console.log("temp");
-    console.log(numeric.prettyPrint(temp));
+    console.log(numeric.prettyPrint(e));
 
-    let temp2= numeric.dot(temp,temp);
-    console.log("temp2");
-    console.log(numeric.prettyPrint(temp2));
-    sse = sse +temp2;
+    let E = numeric.dot(e, e);
+    console.log("E");
+    console.log(numeric.prettyPrint(E));
+    sse = sse + E;
   //  sse = sse + numeric.sub(Ap,b);
   //  
 
@@ -120,7 +121,7 @@ function calc_linLSQ_poly(data,order) {
   
   let A=numeric.rep([N,order+1],0);
   let b=numeric.rep([N],0);
-  for(let i=0;i<N;++i) {
+  for(let i = 0;i < N; ++i) {
 		/***********************
     * TASK: Fill in A and b
     *
@@ -129,11 +130,16 @@ function calc_linLSQ_poly(data,order) {
     * Hint: In the case where order==1, this should give the same result
     *   as your calc_linLSQ_line() function
     ***********************/
-    //A[i][0]=??;
-    //A[i][1]=??;
-    //...
-    //A[i][order]=??;
-    //b[i]=??;
+   let xPower = 0;
+   for(let j = 0; j <= order; j++) {
+    A[i][j] = x[i] * xPower;
+    xPower++;
+   }
+    // A[i][0] = 1;
+    // A[i][1] = ;
+    // ...
+    // A[i][order]=??;
+    b[i]= y[i];
   }
   
   /***********************
@@ -143,7 +149,50 @@ function calc_linLSQ_poly(data,order) {
   *  EXCEPT use instead the provided eval_poly_func(x,p) instead of eval_line_func
   */
 
-  return p;
+ let ATranspose = numeric.transpose(A);
+ console.log("ATranspose");
+ console.log(numeric.prettyPrint(ATranspose));
+
+ let ATranA = numeric.dot(ATranspose,A);
+ console.log("ATranA");
+ console.log(numeric.prettyPrint(ATranA));
+
+ let InvATA = numeric.inv(ATranA);
+ console.log("InvATAI");
+ console.log(numeric.prettyPrint(InvATA));
+
+ let ATb = numeric.dot(ATranspose,b);
+ console.log("ATb");
+ console.log(numeric.prettyPrint(ATb));
+
+ let p= numeric.dot(ATb,InvATA);
+ console.log("p");
+ console.log(numeric.prettyPrint(p));
+ 
+ let sse=0;
+ for(let i=0;i<N;++i) {
+   let model_out=eval_poly_func(x,p); //The output of the model function on data point x using
+                                         //parameters p
+
+   /***********************
+   * TASK: Calculate the sum of squared error
+   ***********************/
+   let Ap= numeric.dot(A,p);
+   console.log("Ap");
+   console.log(numeric.prettyPrint(Ap));
+
+   let e = numeric.sub(Ap,b);
+   console.log("temp");
+   console.log(numeric.prettyPrint(e));
+
+   let E = numeric.dot(e, e);
+   console.log("E");
+   console.log(numeric.prettyPrint(E));
+   sse = sse + E;
+ }
+ helper_log_write("SSE="+sse);
+   
+ return p;
 }
 
 //////////////////////////////////////////////////////////////////////////////
