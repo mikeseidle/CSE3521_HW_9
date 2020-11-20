@@ -130,15 +130,17 @@ function calc_linLSQ_poly(data,order) {
     * Hint: In the case where order==1, this should give the same result
     *   as your calc_linLSQ_line() function
     ***********************/
-   let xPower = 0;
-   for(let j = 0; j <= order; j++) {
-    A[i][j] = x[i] * xPower;
-    xPower++;
-   }
-    // A[i][0] = 1;
+
+     // A[i][0] = 1;
     // A[i][1] = ;
     // ...
     // A[i][order]=??;
+    
+   let xPower = 1; // matrix column 0 always set to 1
+   for(let j = 0; j <= order; j++) {
+    A[i][j] = xPower;
+    xPower *= x[i];
+   }
     b[i]= y[i];
   }
   
@@ -171,7 +173,7 @@ function calc_linLSQ_poly(data,order) {
  
  let sse=0;
  for(let i=0;i<N;++i) {
-   let model_out=eval_poly_func(x,p); //The output of the model function on data point x using
+   let model_out=eval_poly_func(x[i],p); //The output of the model function on data point x using
                                          //parameters p
 
    /***********************
