@@ -267,26 +267,11 @@ function calc_nonlinLSQ_gaussnewton(data,initial_p,max_iterations) {
       let model_out=eval_nonlin_func(x[i],p); //The output of the model function on data point x using
                                             //parameters p
     
-      /***********************
-       * TASK: Calculate the sum of squared error
-       ***********************/
-      // let Ap= numeric.dot(A,p);
-      // console.log("Ap");
-      // console.log(numeric.prettyPrint(Ap));
-    
-      // let e = numeric.sub(Ap,b);
-      // console.log("temp");
-      // console.log(numeric.prettyPrint(e));
-    
-      // let E = numeric.dot(e, e);
-      // console.log("E");
-      // console.log(numeric.prettyPrint(E));
-      // sse = sse + E;
-    let e = y[i] - model_out;
+      let e = y[i] - model_out;
 
-    let lineError = numeric.dot(e, e);
+      let lineError = numeric.dot(e, e);
 
-    sse = sse + lineError;
+      sse = sse + lineError;
     }
 
 
@@ -355,12 +340,23 @@ function calc_nonlinLSQ_gradientdescent(data,initial_p,max_iterations,learning_r
     //Note: You may find putting some code here, instead of with "Step 1", will make it
     //easier to calculate SSE. This is perfectly fine.
     
-    let sse=0;
     /***********************
     * TASK: Calculate SSE for each iteration
     *
     * Hint: Reuse/modify your code from previous problems
     */
+    let sse = 0;
+    for(let i=0;i<N;++i) {
+      let model_out = eval_nonlin_func(x[i],p); //The output of the model function on data point x using
+                                              //parameters p
+    
+      let e = y[i] - model_out;
+
+      let lineError = numeric.dot(e, e);
+
+      sse = sse + lineError;
+    }
+
     helper_log_write("Iteration "+iter+": SSE="+sse);
     if(iter==max_iterations) break; //Only calculate SSE at end
 
@@ -372,7 +368,13 @@ function calc_nonlinLSQ_gradientdescent(data,initial_p,max_iterations,learning_r
     *
     * Hint: You should be able to reuse some code here!
     */
-    //let grad=??;
+    for(let i=0;i<N;++i) {
+      dy[i] = y[i] - eval_nonlin_func(x[i], p);
+    }
+    
+    let J = calc_jacobian(data,p);
+    let JTranspose = numeric.transpose(J);
+    let grad = numeric.mul(numeric.dot(JTranspose, dy), -2);
 
     //Step 2: Update parameters
     /***********************
@@ -380,7 +382,7 @@ function calc_nonlinLSQ_gradientdescent(data,initial_p,max_iterations,learning_r
     *
     * See slide 23.
     */
-    //p=??;
+    p = numeric.sub(p, numeric.mul(grad, learning_rate));
   }
   return p;
 }
