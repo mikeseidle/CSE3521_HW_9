@@ -46,8 +46,8 @@ function calc_linLSQ_line(data) {
     A[i][1]=1; // Set coefficient of k to 1
     b[i]=y[i];
   }
-  console.log(numeric.prettyPrint(A));
-  console.log(numeric.prettyPrint(b));
+  //console.log(numeric.prettyPrint(A));
+  //console.log(numeric.prettyPrint(b));
 
   /***********************
   * TASK: Solve for parameters
@@ -55,24 +55,24 @@ function calc_linLSQ_line(data) {
   * Refer to slides 18-19
   ***********************/
   let ATranspose = numeric.transpose(A);
-  console.log("ATranspose");
-  console.log(numeric.prettyPrint(ATranspose));
+  //console.log("ATranspose");
+  //console.log(numeric.prettyPrint(ATranspose));
 
   let ATranA = numeric.dot(ATranspose,A);
-  console.log("ATranA");
-  console.log(numeric.prettyPrint(ATranA));
+  //console.log("ATranA");
+  //console.log(numeric.prettyPrint(ATranA));
 
   let InvATA = numeric.inv(ATranA);
-  console.log("InvATAI");
-  console.log(numeric.prettyPrint(InvATA));
+  //console.log("InvATAI");
+  //console.log(numeric.prettyPrint(InvATA));
 
   let ATb = numeric.dot(ATranspose,b);
-  console.log("ATb");
-  console.log(numeric.prettyPrint(ATb));
+  //console.log("ATb");
+  //console.log(numeric.prettyPrint(ATb));
 
   let p= numeric.dot(ATb,InvATA);
-  console.log("p");
-  console.log(numeric.prettyPrint(p));
+  //console.log("p");
+  //console.log(numeric.prettyPrint(p));
 
   // Flip a and b in array so that p[0] = b and p[1] = a
   temp = p[0];
@@ -87,17 +87,18 @@ function calc_linLSQ_line(data) {
     /***********************
     * TASK: Calculate the sum of squared error
     ***********************/
-   let Ap= numeric.dot(A,p);
-    console.log("Ap");
-    console.log(numeric.prettyPrint(Ap));
+   // let Ap= numeric.dot(A,p);
+    //console.log("Ap");
+    //console.log(numeric.prettyPrint(Ap));
 
-    let e = numeric.sub(Ap,b);
-    console.log("temp");
-    console.log(numeric.prettyPrint(e));
+    let e = model_out - b[i];
+    //let e = numeric.sub(Ap,b);
+    //console.log("temp");
+    //console.log(numeric.prettyPrint(e));
 
     let E = numeric.dot(e, e);
-    console.log("E");
-    console.log(numeric.prettyPrint(E));
+    //console.log("E");
+    //console.log(numeric.prettyPrint(E));
     sse = sse + E;
   //  sse = sse + numeric.sub(Ap,b);
   //  
@@ -135,7 +136,7 @@ function calc_linLSQ_poly(data,order) {
     // A[i][1] = ;
     // ...
     // A[i][order]=??;
-    
+
    let xPower = 1; // matrix column 0 always set to 1
    for(let j = 0; j <= order; j++) {
     A[i][j] = xPower;
@@ -152,24 +153,24 @@ function calc_linLSQ_poly(data,order) {
   */
 
  let ATranspose = numeric.transpose(A);
- console.log("ATranspose");
- console.log(numeric.prettyPrint(ATranspose));
+//  console.log("ATranspose");
+//  console.log(numeric.prettyPrint(ATranspose));
 
  let ATranA = numeric.dot(ATranspose,A);
- console.log("ATranA");
- console.log(numeric.prettyPrint(ATranA));
+//  console.log("ATranA");
+//  console.log(numeric.prettyPrint(ATranA));
 
  let InvATA = numeric.inv(ATranA);
- console.log("InvATAI");
- console.log(numeric.prettyPrint(InvATA));
+//  console.log("InvATAI");
+//  console.log(numeric.prettyPrint(InvATA));
 
  let ATb = numeric.dot(ATranspose,b);
- console.log("ATb");
- console.log(numeric.prettyPrint(ATb));
+//  console.log("ATb");
+//  console.log(numeric.prettyPrint(ATb));
 
  let p= numeric.dot(ATb,InvATA);
- console.log("p");
- console.log(numeric.prettyPrint(p));
+//  console.log("p");
+//  console.log(numeric.prettyPrint(p));
  
  let sse=0;
  for(let i=0;i<N;++i) {
@@ -179,17 +180,18 @@ function calc_linLSQ_poly(data,order) {
    /***********************
    * TASK: Calculate the sum of squared error
    ***********************/
-   let Ap= numeric.dot(A,p);
-   console.log("Ap");
-   console.log(numeric.prettyPrint(Ap));
+   //let Ap= numeric.dot(A,p);
+  //  console.log("Ap");
+  //  console.log(numeric.prettyPrint(Ap));
 
-   let e = numeric.sub(Ap,b);
-   console.log("temp");
-   console.log(numeric.prettyPrint(e));
+  let e = model_out - b[i];
+   //let e = numeric.sub(Ap,b);
+  //  console.log("temp");
+  //  console.log(numeric.prettyPrint(e));
 
    let E = numeric.dot(e, e);
-   console.log("E");
-   console.log(numeric.prettyPrint(E));
+  //  console.log("E");
+  //  console.log(numeric.prettyPrint(E));
    sse = sse + E;
  }
  helper_log_write("SSE="+sse);
@@ -215,12 +217,13 @@ function calc_jacobian(data,p) {
     *
     * Hint: You should use the built-in Math.pow() and Math.log() functions for this
     */
-    //J[i][3]=??;
-    //J[i][2]=??;
-    //J[i][1]=??;
-    //J[i][0]=??;
+    J[i][0] = 1;  // d
+    J[i][1] = x[i]; // c 
+    J[i][2] = p[3] * Math.pow(x[i], p[2]) * Math.log(x[i]); // b
+    J[i][3] = Math.pow(x[i], p[2]); // a
   }
-  
+  console.log("J");
+  console.log(numeric.prettyPrint(J));
   return J;
 }
 
@@ -236,7 +239,7 @@ function calc_nonlinLSQ_gaussnewton(data,initial_p,max_iterations) {
   let y=squeeze_to_vector(numeric.getBlock(data,[0, 1],[N-1, 1])); //Extract y (target) values
 
   let p=initial_p.slice(0); //Make a copy, just to be safe
-  let dy=numeric.rep([N],0);
+  let dy=numeric.rep([N],0); // delta y
   for(let iter=0;iter<=max_iterations;++iter) {
     //Step 1: Find error for current guess
     for(let i=0;i<N;++i) {
@@ -248,21 +251,50 @@ function calc_nonlinLSQ_gaussnewton(data,initial_p,max_iterations) {
       * Hint: You may use the provided function eval_nonlin_func(x,p) to evaluate
       *   our non-linear function
       */
-      //dy[i]=??;
+      dy[i] = y[i] - eval_nonlin_func(x[i], p);
+      console.log("dy");
+      console.log(numeric.prettyPrint(dy));
     }
     
-    let sse=0;
     /***********************
     * TASK: Calculate SSE for each iteration
     *
     * Hint: Reuse/modify your code from previous problems.
     * Hint 2: Consider, perhaps you have already calculated part of what SSE needs?
     */
+    let sse=0;
+    for(let i=0;i<N;++i) {
+      let model_out=eval_nonlin_func(x[i],p); //The output of the model function on data point x using
+                                            //parameters p
+    
+      /***********************
+       * TASK: Calculate the sum of squared error
+       ***********************/
+      // let Ap= numeric.dot(A,p);
+      // console.log("Ap");
+      // console.log(numeric.prettyPrint(Ap));
+    
+      // let e = numeric.sub(Ap,b);
+      // console.log("temp");
+      // console.log(numeric.prettyPrint(e));
+    
+      // let E = numeric.dot(e, e);
+      // console.log("E");
+      // console.log(numeric.prettyPrint(E));
+      // sse = sse + E;
+    let e = y[i] - model_out;
+
+    let lineError = numeric.dot(e, e);
+
+    sse = sse + lineError;
+    }
+
+
     helper_log_write("Iteration "+iter+": SSE="+sse);
     if(iter==max_iterations) break; //Only calculate SSE at end
 
     //Step 2: Find the Jacobian around the current guess
-    let J=calc_jacobian(data,p);
+    let J = calc_jacobian(data,p);
 
     //Step 3: Calculate change in guess
     /***********************
@@ -274,6 +306,25 @@ function calc_nonlinLSQ_gaussnewton(data,initial_p,max_iterations) {
     *   can alter/reuse some of your previous code?
     */
     //let dp=??;
+    let JTranspose = numeric.transpose(J);
+    // console.log("JTranspose");
+    // console.log(numeric.prettyPrint(JTranspose));
+
+    let JTranJ = numeric.dot(JTranspose,J);
+    // console.log("JTranJ");
+    // console.log(numeric.prettyPrint(JTranJ));
+
+    let InvJTJ = numeric.inv(JTranJ);
+    // console.log("InvJTJ");
+    // console.log(numeric.prettyPrint(InvJTJ));
+
+    let InvJTJ_JTran = numeric.dot(InvJTJ, JTranspose);
+    // console.log("InvJTJ_JTran");
+    // console.log(numeric.prettyPrint(InvJTJ_JTran));
+
+    let dp = numeric.dot(InvJTJ_JTran,dy);
+    console.log("dp");
+    console.log(numeric.prettyPrint(dp));
     
     //Step 4: Make new guess
     /***********************
@@ -281,7 +332,7 @@ function calc_nonlinLSQ_gaussnewton(data,initial_p,max_iterations) {
     *
     * Slide 10, of course
     */
-    //p=??;
+    p = numeric.add(p, dp);
   }
   return p;
 }
